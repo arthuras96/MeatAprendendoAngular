@@ -370,5 +370,36 @@
       "restaurantId": "tasty-treats"
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "address": "Rua do Adubo",
+      "number": "3",
+      "optionalAddress": "Ao lado de algo",
+      "paymentOption": "REF",
+      "orderItems": [
+        {
+          "quantity": 2,
+          "menuId": "zlasagna"
+        }
+      ],
+      "id": 1
+    },
+    {
+      "address": "Rua Adriano Jesus da Costa",
+      "number": "45",
+      "optionalAddress": "",
+      "paymentOption": "DEB",
+      "orderItems": [
+        {
+          "quantity": 1,
+          "menuId": "capp"
+        },
+        {
+          "quantity": 1,
+          "menuId": "greensandwich"
+        }
+      ],
+      "id": 2
+    }
+  ]
 }
