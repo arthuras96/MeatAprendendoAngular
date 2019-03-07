@@ -4,8 +4,8 @@ import { OrderService } from './order.service';
 import { CartItem } from 'app/restaurant-detail/shopping-cart/cart-item.model';
 import { Order, OrderItem } from './order.model';
 import { Router } from '@angular/router'
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms'
-import 'rxjs/add/operator/do'
+import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms'
+import { tap } from 'rxjs/operators'
 
 @Component({
   selector: 'mt-order',
@@ -33,15 +33,16 @@ export class OrderComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.orderForm = this.formBuilder.group({
-      name: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
+    this.orderForm = new FormGroup({
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(5)]}),
       email: this.formBuilder.control('', [Validators.required, Validators.pattern(this.emailPatterm)]),
       emailConfirmation: this.formBuilder.control('', [Validators.required, Validators.pattern(this.emailPatterm)]),
       address: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
       number: this.formBuilder.control('', [Validators.required, Validators.pattern(this.numberPatterm)]),
       optionalAddress: this.formBuilder.control(''),
       paymentOption: this.formBuilder.control('', [Validators.required])
-    }, {validator: OrderComponent.equalsTo})
+    }, {validators: [OrderComponent.equalsTo], updateOn: 'blur'})
   }
 
   static equalsTo(group: AbstractControl): {[key: string]: boolean}{
@@ -85,9 +86,9 @@ export class OrderComponent implements OnInit {
       .map((item:CartItem)=> new OrderItem(item.quantity, item.menuItem.id))
 
     this.orderService.checkOrder(order)
-      .do((orderId: string) => {
+      .pipe(tap((orderId: string) => {
         this.orderId = orderId
-      })
+      }))
       .subscribe((orderId: string) => {
         this.router.navigate(['/order-summary'])
         this.orderService.clear()
